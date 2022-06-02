@@ -13,6 +13,17 @@ import cheetah.modelo.Ordenador;
 
 @Repository
 public interface IOrdenador extends CrudRepository<Ordenador, Integer>{
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE Ordenador o SET o.enabled = :enabled WHERE o.id = :id")
+	void habilitar(@Param(value = "id") int id, @Param(value = "enabled") boolean enable);
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE Ordenador o SET o.enabled = :enabled WHERE o.id = :id")
+	void deshabilitar(@Param(value = "id") int id, @Param(value = "enabled") boolean enable);
+	
 	@Transactional
 	@Modifying
 	@Query("UPDATE Ordenador o SET o.sesion = :sesion, o.inicioSesion = :inicioSesion WHERE o.id = :id")
@@ -22,6 +33,11 @@ public interface IOrdenador extends CrudRepository<Ordenador, Integer>{
 	@Modifying
 	@Query("UPDATE Ordenador o SET o.sesion = :sesion, o.finSesion = :finSesion WHERE o.id = :id")
 	void cerrarSesion(@Param(value = "id") int id, @Param(value = "sesion") boolean sesion, @Param(value = "finSesion") LocalTime finSesion);
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE Ordenador o SET o.numSerie = :numSerie, o.tarifa = :tarifa WHERE o.id = :id")
+	void editarOrdenador(@Param(value = "id") int id, @Param(value = "numSerie") String numSerie, @Param(value = "tarifa") String tarifa);
 	
 	@Query("SELECT numSerie FROM Ordenador where id = :id")
 	String findNumSerie(@Param(value = "id") int id);

@@ -11,11 +11,11 @@ import cheetah.modelo.Cliente;
 import cheetah.servicioInterfaz.IClienteServicio;
 
 @Service
-public class ClienteServicio implements IClienteServicio{
-	
+public class ClienteServicio implements IClienteServicio {
+
 	@Autowired
 	private ICliente data;
-	
+
 	@Override
 	public List<Cliente> listar() {
 		return (List<Cliente>) data.findAll();
@@ -27,14 +27,8 @@ public class ClienteServicio implements IClienteServicio{
 	}
 
 	@Override
-	public int save(Cliente c) {
-		int res = 0;
-		Cliente cliente = data.save(c);
-		if(!cliente.equals(null)) {
-			res = 1;
-		}
-			
-		return res;
+	public void save(Cliente c) {
+		data.save(c);
 	}
 
 	@Override

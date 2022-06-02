@@ -1,20 +1,28 @@
 package cheetah.modelo;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import cheetah.utils.*;
+
 @Entity
 @Table(name = "Cliente")
 public class Cliente {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer id;
 	
+	@Column(unique=true)
 	private String dni;
+	
 	private String nombre;
 	private String apellido1;
 	private String apellido2;
@@ -22,8 +30,12 @@ public class Cliente {
 	private String correo; 
 	
 	private double saldo;
+	
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
@@ -83,5 +95,64 @@ public class Cliente {
 		this.saldo = saldo;
 	}
 	
-	
+	//Validador de los distintos campos del cliente
+	public boolean isValid(Cliente c) {
+		
+		boolean res = false;
+		Pattern pattern = Pattern.compile("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}");
+        Matcher mat = pattern.matcher(c.getCorreo());
+		
+        //Se valida el dni
+		for(int i = 0; i < c.getDni().length() - 2; i++) {
+			if (!Utiles.LISTA_NUMEROS.contains(Character.getNumericValue(c.getDni().charAt(i)))) {
+				System.out.println("Error dni");
+				return res;
+			}		
+		}
+		
+		if (!Character.isLetter(c.getDni().charAt(c.getDni().length() - 1))) {
+			System.out.println("Error letra dni");
+			return res;
+		}
+		
+		//Se valida el nombre
+		for(int i = 0; i < c.getNombre().length() - 1; i++) {
+			if (!Character.isLetter(c.getNombre().charAt(i)) && !Character.isWhitespace(c.getNombre().charAt(i))) {
+				System.out.println("Error nombre");
+				return res;
+			}		
+		}
+		
+		//Se valida el primer apellido
+		for(int i = 0; i < c.getApellido1().length() - 1; i++) {
+			if (!Character.isLetter(c.getApellido1().charAt(i)) && !Character.isWhitespace(c.getNombre().charAt(i))) {
+				System.out.println("Error apellido1");
+				return res;
+			}		
+		}
+		
+		//Se valida el segundo  apellido
+		for(int i = 0; i < c.getApellido2().length() - 1; i++) {
+			if (!Character.isLetter(c.getApellido2().charAt(i)) && !Character.isWhitespace(c.getNombre().charAt(i))) {
+				System.out.println("Error apeellido2");
+				return res;
+			}		
+		}
+		
+		//Se valida el telefono
+		if(c.getTelefono() != (int) c.getTelefono() || c.getTelefono() >= 1000000000 || c.getTelefono() < 600000000) {
+			System.out.println("Error telefono");
+			return res;
+		}
+		
+		//Se valida el correo
+		if(!mat.matches()) {
+			System.out.println("Error correo");
+			return res;
+		}
+		
+		res = true;
+		return res;
+	}
+
 }

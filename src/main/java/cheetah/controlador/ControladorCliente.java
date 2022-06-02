@@ -3,8 +3,6 @@ package cheetah.controlador;
 import java.util.List;
 import java.util.Optional;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,11 +20,6 @@ public class ControladorCliente {
 	
 	@Autowired
 	private IClienteServicio servicio;
-	
-	@GetMapping("/volver")
-	public String volver() {
-		return "redirect:index";
-	}
 	
 	@GetMapping("/listarClientes")
 	public String listar(Model model) {
@@ -55,8 +48,12 @@ public class ControladorCliente {
 	}
 	
 	@PostMapping("/saveCliente")
-	public String save(@Valid Cliente c, Model model) {
-		servicio.save(c);
+	public String save(Cliente c, Model model) {
+		if (c.isValid(c)) {
+			servicio.save(c);
+		} else {
+			System.out.println("Intento fallido");
+		}
 		return "redirect:/listarClientes";
 	}
 }

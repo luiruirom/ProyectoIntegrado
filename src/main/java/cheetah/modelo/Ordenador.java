@@ -1,7 +1,10 @@
 package cheetah.modelo;
 
 import java.time.LocalTime;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,47 +14,96 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "Ordenador")
 public class Ordenador {
+	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer id;
+	
+	@Column(unique=true)
 	private String numSerie;
-	private boolean sesion;
+	
+	private boolean sesion = false;
 	private LocalTime inicioSesion;
 	private LocalTime finSesion;
 	private String tarifa;
-	
-	public int getId() {
+	private boolean enabled = true;
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getId() {
 		return id;
 	}
+
 	public String getNumSerie() {
 		return numSerie;
 	}
+
 	public void setNumSerie(String numSerie) {
 		this.numSerie = numSerie;
 	}
+
 	public boolean isSesion() {
 		return sesion;
 	}
+
 	public void setSesion(boolean sesion) {
 		this.sesion = sesion;
 	}
+
 	public LocalTime getInicioSesion() {
 		return inicioSesion;
 	}
+
 	public void setInicioSesion(LocalTime inicioSesion) {
 		this.inicioSesion = inicioSesion;
 	}
+
 	public LocalTime getFinSesion() {
 		return finSesion;
 	}
+
 	public void setFinSesion(LocalTime finSesion) {
 		this.finSesion = finSesion;
 	}
+
 	public String getTarifa() {
 		return tarifa;
 	}
+
 	public void setTarifa(String tarifa) {
 		this.tarifa = tarifa;
 	}
 	
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+	
+	public boolean isValid(Ordenador o) {
+		
+		boolean res = false;
+		Pattern pattern = Pattern.compile("YGO+-100[0-9][0-9]$");
+        Matcher mat = pattern.matcher(o.getNumSerie());
+		
+		//Se valida el número de serie
+		if(!mat.matches()) {
+			System.out.println("Error número de serie");
+			return res;
+		}
+		
+		//Se valida que la tarifa sea alta o baja
+		if(!o.getTarifa().equals("alta") && !o.getTarifa().equals("baja")) {
+			System.out.println("Error tarifa");
+			return res;
+		}
+		
+		res = true;
+		return res;
+	}
+
 }

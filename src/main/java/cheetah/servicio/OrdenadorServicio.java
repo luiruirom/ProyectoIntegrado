@@ -5,9 +5,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
-import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
-import java.io.FileOutputStream;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,20 +33,24 @@ public class OrdenadorServicio implements IOrdenadorServicio {
 	}
 
 	@Override
-	public int save(Ordenador o) {
-		int res = 0;
-		Ordenador ordenador = data.save(o);
-		if (!ordenador.equals(null)) {
-			res = 1;
-		}
-
-		return res;
+	public void save(Ordenador o) {
+		data.save(o);
 	}
 
 	@Override
 	public void delete(int id) {
 		data.deleteById(id);
 	} 
+	
+	@Override
+	public void habilitar(int id) {
+		data.habilitar(id, true);		
+	}
+
+	@Override
+	public void deshabilitar(int id) {
+		data.deshabilitar(id, false);	
+	}
 	
 	@Override
 	public void iniciarSesion(int id) {
@@ -63,6 +66,11 @@ public class OrdenadorServicio implements IOrdenadorServicio {
 	}
 	
 	@Override
+	public void editarOrdenador(int id, String numSerie, String tarifa) {
+		data.editarOrdenador(id, numSerie, tarifa);	
+	}
+	
+	@Override
 	public void crearFactura(String numSerie, String tarifa, LocalTime inicio, LocalTime fin){
 		try {
 			double costeTotal = Math.round(((fin.toSecondOfDay() - (inicio.toSecondOfDay()))/60)/60);
@@ -71,9 +79,14 @@ public class OrdenadorServicio implements IOrdenadorServicio {
 			int horaFactura = horasFactura.getHour();
 			int minutosFactura = horasFactura.getMinute();
 			int segundosFactura = horasFactura.getSecond();
-			String nombreFactura = "F:\\Luis\\dev\\spring-workspace\\CheetahApp\\src\\main\\resources\\assets\\facturas\\" + fechaFactura.toString() + "." + horaFactura + "." + minutosFactura + "." + segundosFactura +".txt";
-			FileOutputStream archivoFactura = new FileOutputStream(nombreFactura);
-			DataOutputStream outStream = new DataOutputStream(new BufferedOutputStream(archivoFactura));
+			String nombreFactura = "F:\\Luis\\dev\\spring-workspace\\CheetahApp\\src\\main\\resources\\assets\\facturas\\" + numSerie + "." + fechaFactura.toString() + "." + horaFactura + "." + minutosFactura + "." + segundosFactura +".txt";
+			
+			if(tarifa.equals("alta")) {
+				costeTotal = costeTotal*2;
+			}
+			
+			BufferedWriter bw = new BufferedWriter(new FileWriter(nombreFactura));
+			
 			String factura = " ***** FACTURA ***** " + 
 			"\n" + "Equipo: " + numSerie + 
 			"\n" + "Hora de inicio: " + inicio.toString() + 
@@ -81,15 +94,11 @@ public class OrdenadorServicio implements IOrdenadorServicio {
 			"\n" + "Tipo de tarifa: " + tarifa +
 			"\n" + "*******************************" + 
 			"\n" + "TOTAL: " + costeTotal;
-			outStream.writeUTF(factura);
-			outStream.close();
+			bw.write(factura);
+			bw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-
-//	LocalTime hora1 = LocalTime.now(); 
-//	LocalTime hora2 = LocalTime.now(); 
-//	servicio.crearFactura("Nice", "alta", hora1, hora2, 1);
 
 }

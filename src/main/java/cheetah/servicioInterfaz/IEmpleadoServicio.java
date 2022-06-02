@@ -7,8 +7,8 @@ import cheetah.modelo.Empleado;
 
 public interface IEmpleadoServicio {
 	public List<Empleado>listar();
-	public Optional<Empleado>listarId(int id);
-	public int save(Empleado e);
+	public Optional<Empleado> listarId(int id);
+	public void save(Empleado e);
 	public void delete(int id);
 
 }

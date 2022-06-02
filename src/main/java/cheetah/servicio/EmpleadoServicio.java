@@ -27,14 +27,8 @@ public class EmpleadoServicio implements IEmpleadoServicio{
 	}
 
 	@Override
-	public int save(Empleado e) {
-		int res = 0;
-		Empleado empleado = data.save(e);
-		if(!empleado.equals(null)) {
-			res = 1;
-		}
-			
-		return res;
+	public void save(Empleado e) {
+		data.save(e);
 	}
 
 	@Override

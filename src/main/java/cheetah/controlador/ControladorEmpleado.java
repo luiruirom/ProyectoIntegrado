@@ -3,8 +3,6 @@ package cheetah.controlador;
 import java.util.List;
 import java.util.Optional;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,8 +48,12 @@ public class ControladorEmpleado {
 	}
 	
 	@PostMapping("/saveEmpleado")
-	public String save(@Valid Empleado e, Model model) {
-		servicio.save(e);
+	public String save(Empleado e, Model model) {
+		if (e.isValid(e)) {
+			servicio.save(e);
+		} else {
+			System.out.println("Intento fallido");
+		}
 		return "redirect:/listarEmpleados";
 	}
 	
