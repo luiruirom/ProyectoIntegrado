@@ -13,6 +13,9 @@
 	<div class="container mt-4 ml-1 mr-1">
 		<div class="row">
 			<div class="col">
+				<a th:href="@{/index}"><h2>CHEETAH</h2></a>
+			</div>
+			<div class="col">
 				<a th:href="@{/login}"><h2>Login</h2></a>
 			</div>
 		</div>
@@ -29,9 +32,13 @@
 					</div>
 					<div class="card-footer">
 						<div th:switch="${ordenador.enabled}">
-							<div th:case="true" class="btn btn-success" reservar>Reservar</div>
 							<div th:case="false" class="btn btn-secondary">No disponible</div>
-													
+							<div th:case="true">
+								<div th:switch="${ordenador.sesion}">
+									<a th:case="false" th:href="@{/reservarOrdenador/}+${ordenador.id}" class="btn btn-success">Reservar</a>
+									<div th:case="true" class="btn btn-danger">Ocupado</div>
+								</div>
+							</div>							
 						</div>				
 					</div>
 				</div>

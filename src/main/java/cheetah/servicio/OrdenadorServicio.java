@@ -1,13 +1,7 @@
 package cheetah.servicio;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +37,11 @@ public class OrdenadorServicio implements IOrdenadorServicio {
 	} 
 	
 	@Override
+	public int findIdByNumSerie(String numSerie) {
+		return data.findIdByNumSerie(numSerie);
+	}
+	
+	@Override
 	public void habilitar(int id) {
 		data.habilitar(id, true);		
 	}
@@ -54,15 +53,12 @@ public class OrdenadorServicio implements IOrdenadorServicio {
 	
 	@Override
 	public void iniciarSesion(int id) {
-		LocalTime tiempoActual = LocalTime.now();
-		data.iniciarSesion(id, true, tiempoActual);
+		data.iniciarSesion(id, true);
 	}
 
 	@Override
 	public void cerrarSesion(int id) {
-		LocalTime tiempoActual = LocalTime.now();
-		data.cerrarSesion(id, false, tiempoActual);
-		crearFactura(data.findNumSerie(id),data.findTarifa(id),data.findHoraInicio(id), data.findHoraFin(id));
+		data.cerrarSesion(id, false);
 	}
 	
 	@Override
@@ -70,35 +66,4 @@ public class OrdenadorServicio implements IOrdenadorServicio {
 		data.editarOrdenador(id, numSerie, tarifa);	
 	}
 	
-	@Override
-	public void crearFactura(String numSerie, String tarifa, LocalTime inicio, LocalTime fin){
-		try {
-			double costeTotal = Math.round(((fin.toSecondOfDay() - (inicio.toSecondOfDay()))/60)/60);
-			LocalDate fechaFactura = LocalDate.now();
-			LocalDateTime horasFactura = LocalDateTime.now();
-			int horaFactura = horasFactura.getHour();
-			int minutosFactura = horasFactura.getMinute();
-			int segundosFactura = horasFactura.getSecond();
-			String nombreFactura = "F:\\Luis\\dev\\spring-workspace\\CheetahApp\\src\\main\\resources\\assets\\facturas\\" + numSerie + "." + fechaFactura.toString() + "." + horaFactura + "." + minutosFactura + "." + segundosFactura +".txt";
-			
-			if(tarifa.equals("alta")) {
-				costeTotal = costeTotal*2;
-			}
-			
-			BufferedWriter bw = new BufferedWriter(new FileWriter(nombreFactura));
-			
-			String factura = " ***** FACTURA ***** " + 
-			"\n" + "Equipo: " + numSerie + 
-			"\n" + "Hora de inicio: " + inicio.toString() + 
-			"\n" + "Hora de fin: " + fin.toString() + 
-			"\n" + "Tipo de tarifa: " + tarifa +
-			"\n" + "*******************************" + 
-			"\n" + "TOTAL: " + costeTotal;
-			bw.write(factura);
-			bw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 }

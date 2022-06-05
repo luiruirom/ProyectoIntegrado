@@ -1,6 +1,5 @@
 package cheetah.modelo;
 
-import java.time.LocalTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,13 +20,10 @@ public class Ordenador {
 	
 	@Column(unique=true)
 	private String numSerie;
-	
 	private boolean sesion = false;
-	private LocalTime inicioSesion;
-	private LocalTime finSesion;
 	private String tarifa;
 	private boolean enabled = true;
-
+	
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -50,22 +46,6 @@ public class Ordenador {
 
 	public void setSesion(boolean sesion) {
 		this.sesion = sesion;
-	}
-
-	public LocalTime getInicioSesion() {
-		return inicioSesion;
-	}
-
-	public void setInicioSesion(LocalTime inicioSesion) {
-		this.inicioSesion = inicioSesion;
-	}
-
-	public LocalTime getFinSesion() {
-		return finSesion;
-	}
-
-	public void setFinSesion(LocalTime finSesion) {
-		this.finSesion = finSesion;
 	}
 
 	public String getTarifa() {

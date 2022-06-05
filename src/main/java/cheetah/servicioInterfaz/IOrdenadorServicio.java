@@ -1,6 +1,5 @@
 package cheetah.servicioInterfaz;
 
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,11 +11,11 @@ public interface IOrdenadorServicio {
 	public void save(Ordenador o);
 	public void delete(int id);
 	
+	public int findIdByNumSerie(String numSerie);
 	public void habilitar(int id);
 	public void deshabilitar (int id);
 	public void iniciarSesion(int id);
 	public void cerrarSesion(int id);
 	public void editarOrdenador(int id, String numSerie, String tarifa);
-	public void crearFactura(String numSerie, String tarifa, LocalTime inicio, LocalTime fin);
 	
 }

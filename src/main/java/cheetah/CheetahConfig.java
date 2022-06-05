@@ -1,5 +1,7 @@
 package cheetah;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -8,7 +10,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import cheetah.interfaz.IOrdenador;
+import cheetah.modelo.Ordenador;
 import cheetah.servicio.DetallesUsuarioServicio;
+import cheetah.servicio.OrdenadorServicio;
 import cheetah.utils.Utiles;
 
 @Configuration
@@ -19,27 +24,27 @@ public class CheetahConfig extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
     DetallesUsuarioServicio userDetailsService;
-	
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http
-			.authorizeRequests()
-			.antMatchers(Utiles.RESOURCES).permitAll()
-			.antMatchers("/", "/index").permitAll()
-			.antMatchers("/admin*").access("hasRole('ADMIN')")
-                .anyRequest().authenticated()
-                .and()
-            .formLogin()
-                .loginPage("/login")
-                .permitAll()
-                .defaultSuccessUrl("/loggedIndex")
-                .failureUrl("/login?error=true")
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .and()
-            .logout()
-                .permitAll()
-                .logoutSuccessUrl("/login?logout");
+				http
+				.authorizeRequests()
+				.antMatchers(Utiles.RESOURCES).permitAll()
+				.antMatchers("/", "/index", "/reservarOrdenador/*", "/saveReserva").permitAll()
+				.antMatchers("/admin*").access("hasRole('ADMIN')")
+	                .anyRequest().authenticated()
+	                .and()
+	            .formLogin()
+	                .loginPage("/login")
+	                .permitAll()
+	                .defaultSuccessUrl("/loggedIndex")
+	                .failureUrl("/login?error=true")
+	                .usernameParameter("username")
+	                .passwordParameter("password")
+	                .and()
+	            .logout()
+	                .permitAll()
+	                .logoutSuccessUrl("/login?logout");		
     }
 	
     
