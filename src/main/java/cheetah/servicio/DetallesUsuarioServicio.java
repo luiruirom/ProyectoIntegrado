@@ -41,4 +41,23 @@ public class DetallesUsuarioServicio implements UserDetailsService, IUsuarioServ
 		UserDetails user = (UserDetails) new User(appUser.getUsername(), appUser.getPassword(), grantList);
 		return user;
 	}
+
+	@Override
+	public void crearUser(int id, String password, String username) {
+		data.crearUser(id, password, username);
+	}
+
+	@Override
+	public void linkearUser(int id) {
+		data.linkearUser(id);
+	}
+
+	@Override
+	public int findIdByUsername(String username) {
+		return data.findIdByUsername(username);
+	}
+	
+	public int nextId() {
+		return data.nextId() + 1;
+	}
 }

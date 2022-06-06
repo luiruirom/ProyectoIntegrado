@@ -1,6 +1,7 @@
 package cheetah.controlador;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +17,7 @@ import cheetah.modelo.Ordenador;
 import cheetah.modelo.Sesion;
 import cheetah.servicioInterfaz.IOrdenadorServicio;
 import cheetah.servicioInterfaz.ISesionServicio;
+import cheetah.utils.SesionAux;
 
 @Controller
 @RequestMapping
@@ -119,13 +121,29 @@ public class ControladorOrdenador {
 	}
 	
 	@PostMapping("/saveReserva")
-	public String saveReserva(Sesion s, String numSerie) {
+	public String saveReserva(String numSerie, Sesion s) {
 		System.out.println(s.toString());
 		s.setNum_Serie(numSerie);
+		System.out.println(numSerie);
 		int id = servicioO.findIdByNumSerie(s.getNum_Serie());
-		LocalDateTime.parse(s.getInicioSesion());
 		servicioO.iniciarSesion(id);
-		servicioS.iniciarSesion(id);
+		servicioS.reservarSesion(LocalDateTime.parse(s.getInicioSesion()), id, s.getUsuario_Reserva());
 		return "redirect:/index";
+	}
+	
+	@GetMapping("/informesUso")
+	public String informeUso(Model model){
+		SesionAux nextSesion = new SesionAux();
+		List<SesionAux> listaSesionesAux = new ArrayList<SesionAux>();
+		Double dineroCaja = servicioS.dineroTotal();
+		List<String>listaSesiones = servicioS.listarSesiones();
+		for(int i = 0; i < listaSesiones.size(); i++) {
+			nextSesion = new SesionAux();
+			nextSesion.sesionParser(listaSesiones.get(i));
+			listaSesionesAux.add(nextSesion); 
+		}
+		model.addAttribute("dineroCaja", dineroCaja);
+		model.addAttribute("listaSesiones", listaSesionesAux);
+		return "admin/informesUso";	
 	}
 }

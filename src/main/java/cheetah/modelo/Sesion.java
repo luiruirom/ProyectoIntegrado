@@ -8,22 +8,24 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="Sesion")
+@Table(name = "Sesion")
 public class Sesion {
-	
+
 	@Id
 	private Integer id;
-	
-	@Column(columnDefinition="Timestamp(0)")
+
+	@Column(columnDefinition = "Timestamp(0)")
 	private String inicio_Sesion;
-	
-	@Column(columnDefinition="Timestamp(0)")
+
+	@Column(columnDefinition = "Timestamp(0)")
 	private LocalDateTime fin_Sesion;
-	
+
 	private double coste_Total;
-    
+
 	private String num_Serie;
 	
+	private String usuario_Reserva;
+
 	public String getInicioSesion() {
 		return inicio_Sesion;
 	}
@@ -55,13 +57,19 @@ public class Sesion {
 	public void setNum_Serie(String numSerie) {
 		this.num_Serie = numSerie;
 	}
+	
+	public String getUsuario_Reserva() {
+		return usuario_Reserva;
+	}
+
+	public void setUsuario_Reserva(String usuarioReserva) {
+		this.usuario_Reserva = usuarioReserva;
+	}
 
 	@Override
 	public String toString() {
 		return "Sesion [id=" + id + ", inicio_Sesion=" + inicio_Sesion + ", fin_Sesion=" + fin_Sesion + ", coste_Total="
-				+ coste_Total + ", num_Serie=" + num_Serie + "]";
+				+ coste_Total + ", num_Serie=" + num_Serie + ", usuario_Reserva=" + usuario_Reserva + "]";
 	}
-	
-	
 	
 }

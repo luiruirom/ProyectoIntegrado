@@ -13,7 +13,10 @@ public interface ISesionServicio {
 	public void delete(int id);
 	
 	public void iniciarSesion(int id);
-	public void reservarSesion(LocalDateTime horaReserva, int id);
+	public void reservarSesion(LocalDateTime horaReserva, int id, String usuarioReserva);
 	public void cerrarSesion(int id);
 	public void crearFactura(String numSerie, String tarifa, LocalDateTime inicio, LocalDateTime fin);
+	
+	public Double dineroTotal();
+	public List<String> listarSesiones();
 }

@@ -20,7 +20,10 @@
 					</div>
 					<div class="card-body">
 						<div class="form-group">
-							<input th:field="${ordenador.numSerie}" type="text">
+							<input th:field="${ordenador.numSerie}" type="text" readonly>
+						</div>
+						<div class="form-group">
+							<input th:field="${sesion.usuario_Reserva}" type="text" required/>
 						</div>
 						<div class="form-group">
 							<input th:field="${sesion.inicioSesion}" type="datetime-local" />

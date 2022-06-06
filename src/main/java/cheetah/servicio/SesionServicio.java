@@ -53,28 +53,31 @@ public class SesionServicio implements ISesionServicio{
 		dataO.iniciarSesion(id, true);
 	}
 	
-	public void reservarSesion(LocalDateTime horaReserva, int id) {
+	public void reservarSesion(LocalDateTime horaReserva, int id, String usuarioReserva) {
 		int nextId = dataS.nextId() + 1;
-		dataS.iniciarSesion(nextId, horaReserva, dataO.findNumSerie(id));
+		dataS.reservarSesion(nextId, horaReserva, dataO.findNumSerie(id), usuarioReserva);
 		dataO.iniciarSesion(id, true);
 	}
 
 	@Override
 	public void cerrarSesion(int id) {
+		String numSerieOrdenador = dataO.findNumSerie(id);
+		int idSesion = dataS.findOrdenadorSesionActiva(numSerieOrdenador);
+		String horaInicio = dataS.findHoraInicio(idSesion).substring(0,10)+'T'+dataS.findHoraInicio(idSesion).substring(11);
 		LocalDateTime horaActual = LocalDateTime.now();
-		dataS.cerrarSesion(horaActual, dataO.findNumSerie(id));
+		double costeTotal = Math.round(((horaActual.toLocalTime().toSecondOfDay() - (LocalDateTime.parse(horaInicio).toLocalTime().toSecondOfDay()))/60)/60);	
+		
+		dataS.cerrarSesion(horaActual, costeTotal, numSerieOrdenador);
 		dataO.cerrarSesion(id, false);
-		String nombre = dataO.findNumSerie(id);
 		String tarifa = dataO.findTarifa(id);
-		String horaInicio = dataS.findHoraInicio(id).substring(0,10)+'T'+dataS.findHoraInicio(id).substring(11);
-		dataS.findHoraInicio(id).charAt(10);
-		crearFactura(nombre, tarifa, LocalDateTime.parse(horaInicio), horaActual);
+		crearFactura(numSerieOrdenador, tarifa, LocalDateTime.parse(horaInicio), horaActual);
 	}
 	
 	@Override
 	public void crearFactura(String numSerie, String tarifa, LocalDateTime inicio, LocalDateTime fin){
+		double costeTotal = 0;
 		try {			
-			double costeTotal = Math.round(((fin.toLocalTime().toSecondOfDay() - (fin.toLocalTime().toSecondOfDay()))/60)/60);
+			costeTotal = Math.round(((fin.toLocalTime().toSecondOfDay() - (inicio.toLocalTime().toSecondOfDay()))/60)/60);
 			LocalDate fechaFactura = LocalDate.now();
 			LocalDateTime horasFactura = LocalDateTime.now();
 			int horaFactura = horasFactura.getHour();
@@ -100,5 +103,15 @@ public class SesionServicio implements ISesionServicio{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public List<String> listarSesiones() {
+		return dataS.listarSesiones();
+	}
+	
+	@Override
+	public Double dineroTotal() {
+		return dataS.dineroTotal();
 	}
 }
