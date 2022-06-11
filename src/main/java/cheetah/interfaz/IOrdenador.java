@@ -45,4 +45,7 @@ public interface IOrdenador extends CrudRepository<Ordenador, Integer>{
 	
 	@Query("SELECT tarifa FROM Ordenador where id = :id")
 	String findTarifa(@Param(value = "id") int id);
+	
+	@Query("SELECT COUNT(*) FROM Ordenador")
+	public int nextId();
 }	

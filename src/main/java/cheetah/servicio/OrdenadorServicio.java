@@ -37,6 +37,12 @@ public class OrdenadorServicio implements IOrdenadorServicio {
 		data.deleteById(id);
 	} 
 	
+	public void crearOrdenador(Ordenador o) {
+		int nextId = data.nextId() + 1;
+		o.setId((int) nextId);
+		data.save(o);
+	}
+	
 	@Override
 	public List<Ordenador> listarCaros() {
 		ArrayList<Ordenador> listaOrdenadores = new ArrayList<Ordenador>();

@@ -68,7 +68,17 @@ public class ControladorOrdenador {
 	@GetMapping("/newOrdenador")
 	public String agregar(Model model) {
 		model.addAttribute("ordenador", new Ordenador());
-		return "admin/formOrdenadores";
+		return "admin/formCreacionOrdenador";
+	}
+	
+	@PostMapping("/crearOrdenador")
+	public String crearOrdenador(Ordenador o, Model model) {
+		if (o.isValid(o)) {
+			servicioO.crearOrdenador(o);
+		} else {
+			System.out.println("Intento fallido");
+		}
+		return "redirect:/loggedIndex";
 	}
 	
 	@PostMapping("/saveOrdenador")

@@ -14,6 +14,7 @@ public interface IOrdenadorServicio {
 	public int findIdByNumSerie(String numSerie);
 	public List<Ordenador>listarCaros();
 	public List<Ordenador>listarBaratos();
+	public void crearOrdenador(Ordenador o);
 	public void habilitar(int id);
 	public void deshabilitar (int id);
 	public void iniciarSesion(int id);

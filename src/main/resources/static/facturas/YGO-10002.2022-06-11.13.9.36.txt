@@ -1,0 +1,7 @@
+ ***** FACTURA ***** 
+Equipo: YGO-10002
+Hora de inicio: 13:09:34
+Hora de fin: 13:09:36
+Tipo de tarifa: alta
+*******************************
+TOTAL: 0.0

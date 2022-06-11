@@ -41,7 +41,7 @@ public class SesionServicio implements ISesionServicio{
 	public void save(Sesion s) {
 		dataS.save(s);
 	}
-
+	
 	@Override
 	public void delete(int id) {
 		dataS.deleteById(id);
