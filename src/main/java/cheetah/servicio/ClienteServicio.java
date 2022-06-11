@@ -36,4 +36,14 @@ public class ClienteServicio implements IClienteServicio {
 		data.deleteById(id);
 	}
 
+	@Override
+	public double getSaldo(int id) {
+		return data.getSaldo(id);
+	}
+
+	@Override
+	public void addSaldo(int id, double saldo) {
+		data.addSaldo(id, saldo);		
+	}
+
 }

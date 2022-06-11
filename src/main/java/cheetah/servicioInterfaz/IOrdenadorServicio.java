@@ -12,6 +12,8 @@ public interface IOrdenadorServicio {
 	public void delete(int id);
 	
 	public int findIdByNumSerie(String numSerie);
+	public List<Ordenador>listarCaros();
+	public List<Ordenador>listarBaratos();
 	public void habilitar(int id);
 	public void deshabilitar (int id);
 	public void iniciarSesion(int id);

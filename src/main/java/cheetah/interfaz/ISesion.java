@@ -26,11 +26,14 @@ public interface ISesion extends CrudRepository<Sesion, Integer>{
 	
 	@Query("SELECT COUNT(*) FROM Sesion")
 	public int nextId();
+	
+	@Query("SELECT usuario_Reserva FROM Sesion where id = :id")
+	public String findUser(@Param(value = "id") int id);
 		
 	@Transactional
 	@Modifying
-	@Query(value = "INSERT INTO Sesion s (s.id, s.inicio_Sesion, s.num_Serie, s.coste_Total) VALUES (:id, :inicio_Sesion, :num_Serie, '0')", nativeQuery = true)
-	public void iniciarSesion(@Param(value = "id") int id, @Param(value = "inicio_Sesion") LocalDateTime horaActual, @Param(value = "num_Serie") String numSerie);
+	@Query(value = "INSERT INTO Sesion s (s.id, s.inicio_Sesion, s.num_Serie, s.coste_Total, s.usuario_Reserva) VALUES (:id, :inicio_Sesion, :num_Serie, '0', :usuario_Reserva)", nativeQuery = true)
+	public void iniciarSesion(@Param(value = "id") int id, @Param(value = "inicio_Sesion") LocalDateTime horaActual, @Param(value = "num_Serie") String numSerie, @Param(value = "usuario_Reserva") String usuarioReserva);
 	
 	@Transactional
 	@Modifying
@@ -42,6 +45,9 @@ public interface ISesion extends CrudRepository<Sesion, Integer>{
 	@Query("UPDATE Sesion s SET s.fin_Sesion = :fin_Sesion, s.coste_Total = :coste_Total WHERE s.num_Serie = :num_Serie AND s.fin_Sesion = NULL")
 	public void cerrarSesion(@Param(value = "fin_Sesion") LocalDateTime finSesion, @Param(value = "coste_Total") double costeTotal,  @Param(value = "num_Serie") String numSerie);
 	
+	@Query("SELECT coste_Total FROM Sesion where id = :id")
+	public double findCosteSesion(@Param(value = "id") int id);
+	
 	//Ordenador más usado
 	@Query("SELECT num_Serie, SUM(coste_Total) FROM Sesion GROUP BY num_Serie")
 	public List<String> listarSesiones(); 
@@ -49,5 +55,5 @@ public interface ISesion extends CrudRepository<Sesion, Integer>{
 	//Dinero total en caja
 	@Query("SELECT SUM(coste_Total) FROM Sesion")
 	public Double dineroTotal();
-
+	
 }

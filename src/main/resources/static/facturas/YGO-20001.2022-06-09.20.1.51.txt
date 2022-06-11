@@ -1,0 +1,7 @@
+ ***** FACTURA ***** 
+Equipo: YGO-20001
+Hora de inicio: 19:50
+Hora de fin: 20:01:51
+Tipo de tarifa: baja
+*******************************
+TOTAL: 0.0

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cheetah.modelo.Cliente;
 import cheetah.servicioInterfaz.IClienteServicio;
+import cheetah.utils.SaldoAux;
 
 @Controller
 @RequestMapping
@@ -23,8 +24,10 @@ public class ControladorCliente {
 	
 	@GetMapping("/listarClientes")
 	public String listar(Model model) {
+		SaldoAux saldoAux = new SaldoAux();
 		List<Cliente>listaClientes = servicio.listar();
 		model.addAttribute("listaClientes", listaClientes);
+		model.addAttribute("saldoAux", saldoAux);
 		return "admin/clientes";
 	}
 	
@@ -55,5 +58,15 @@ public class ControladorCliente {
 			System.out.println("Intento fallido");
 		}
 		return "redirect:/listarClientes";
+	}
+	
+	@PostMapping("/addSaldo/{id}")
+	public String addSaldo(@PathVariable int id, SaldoAux saldo) {
+		System.out.println(saldo.getSaldo());
+		double saldoActual = servicio.getSaldo(id);
+		saldoActual = saldoActual + saldo.getSaldo();
+		servicio.addSaldo(id, saldoActual);
+		return "redirect:/listarClientes";
+		
 	}
 }

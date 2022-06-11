@@ -23,6 +23,9 @@ public class Cliente {
 	@Column(unique=true)
 	private String dni;
 	
+	@Column(unique=true)
+	private String username;
+
 	private String nombre;
 	private String apellido1;
 	private String apellido2;
@@ -45,6 +48,14 @@ public class Cliente {
 
 	public void setDni(String dni) {
 		this.dni = dni;
+	}
+	
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getNombre() {

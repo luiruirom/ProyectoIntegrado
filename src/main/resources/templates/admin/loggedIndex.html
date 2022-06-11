@@ -1,75 +1,151 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <title>Cheetah App</title>
+
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
 	rel="stylesheet"
 	integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
-	crossorigin="anonymous">
+	crossorigin="anonymous" />
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+	crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/fed3d98d8d.js"
+	crossorigin="anonymous"></script>
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
 </head>
-<body>
-	<div class="container mt-4 ml-1 mr-1">
-		<div class="row">
-			<div class="col">
-				<a th:href="@{/loggedIndex}"><h2>CHEETAH</h2></a>
+
+<body class="bg-dark">
+	<nav
+		class="navbar navbar-expand-lg navbar-dark bg-secondary border-bottom border-danger"
+		style="margin-bottom: 3%">
+		<div class="container-fluid">
+			<i><a class="navbar-brand me-auto p-2" th:href="@{/loggedIndex}">CHEETAH:
+					<br /> Admin View
+			</a></i>
+			<div class="dropdown ms-auto p-2">
+				<button class="btn btn-secondary dropdown-toggle" type="button"
+					id="dropdownMenuButton1" data-bs-toggle="dropdown"
+					aria-expanded="false">Acciones</button>
+				<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+					<li><a class="dropdown-item" th:href="@{/newUser}">Crear
+							Usuarios</a></li>
+					<li><a class="dropdown-item" th:href="@{/listarEmpleados}">Administrar
+							Empleados</a></li>
+					<li><a class="dropdown-item" th:href="@{/listarClientes}">Administrar
+							Clientes</a></li>
+					<li><a class="dropdown-item" th:href="@{/newOrdenador}">Añadir
+							Ordenador</a></li>
+					<li><a class="dropdown-item" th:href="@{/informesUso}">Informes
+							de Uso </a></li>
+				</ul>
 			</div>
-			<div class="col">
-				<a th:href="@{/newUser}"><h2>Crear usuario</h2></a>
-			</div>
-			<div class="col">
-				<a th:href="@{/listarEmpleados}"><h2>Empleados</h2></a>
-			</div>
-			<div class="col">
-				<a th:href="@{/listarClientes}"><h2>Clientes</h2></a>
-			</div>
-			<div class="col">
-				<a th:href="@{/informesUso}"><h2>Informes de uso</h2></a>
-			</div>
-			<div class="col">
-				<a th:href="@{/apagarGlobal}" th:src="@{../assets/25706.png}">Hola</a>
-			</div>
-			<div class="col">
-				<form th:action="@{/logout}" method="post">
-            		<input type="submit" value="Cerrar Sesion"/>
-            	</form>
-            </div>
+			<a th:href="@{/apagarGlobal}" class="text-white"><i class="fa-solid fa-power-off"></i></a>
+			<form th:action="@{/logout}" method="post" class="ms-auto">
+				<input type="submit" value="Cerrar Sesion" />
+			</form>
 		</div>
-		<div class="row">
-			<div th:each="ordenador:${listaOrdenadores}" class="col">
-				<div class="card">
-					<div class="card-header">
-						<div th:switch="${ordenador.enabled}">
-							<a th:case="false" th:href="@{/habilitar/}+${ordenador.id}" class="btn btn-primary">Iniciar</a>
-							<a th:case="true" th:href="@{/deshabilitar/}+${ordenador.id}" class="btn btn-warning">Parar</a>
+	</nav>
+
+	<h1 class="text-white" style="margin-left: 5%">GAMA ALTA</h1>
+	<div class="row justify-content-center g-0">
+		<div th:each="ordenadorCaro:${listaOrdenadoresCaros}"
+			class="col-sm-12 col-md-6 col-lg-2">
+			<div
+				class="card bg-secondary border border-danger text-center text-white"
+				style="margin: 3%">
+				<a th:href="@{/editarOrdenador/}+${ordenadorCaro.id}"
+					class="align-self-end text-white" style="margin: 3%"><i
+					class="fa-solid fa-gears"></i></a>
+				<h3 th:text="${ordenadorCaro.numSerie}" class="card-title"
+					style="margin-top: 5%"></h3>
+				<div class="card-body">
+					<div th:switch="${ordenadorCaro.enabled}">
+						<div th:case="false">
+							<img th:src="@{/images/pc-icon-error.jpg}" width="100%" />
 						</div>
-						<div th:onclick="eliminar([[${ordenador.id}]])" class="btn btn-secondary">Borrar</div>
-						<h2 th:text="${ordenador.numSerie}"></h2>
-						<a th:href="@{/editarOrdenador/}+${ordenador.id}" class="btn btn-secondary">Editar</a>
-					</div>
-					<div class="card-body">
-						<div>
-							<p th:text="|Gama: ${ordenador.tarifa}|"></p>
-							<p ></p> 
+						<div th:case="true">
+							<img th:src="@{/images/PC-icon-by-nurfajrialdi95-2.jpg}"
+								width="100%" />
 						</div>
-					</div>
-					<div class="card-footer">
-						<div th:switch="${ordenador.sesion}">
-							<a th:case="false" th:href="@{/encender/}+${ordenador.id}" class="btn btn-success">Iniciar</a>
-							<a th:case="true" th:href="@{/apagar/}+${ordenador.id}" class="btn btn-danger">Parar</a>
-						</div>	
+						<p th:text="|Gama: ${ordenadorCaro.tarifa}|"></p>
+						<div class="d-flex flex-row justify-content-center">
+							<div th:switch="${ordenadorCaro.sesion}" class="p-2">
+								<a th:case="false" th:href="@{/encender/}+${ordenadorCaro.id}"
+									class="btn btn-success border-dark">Iniciar</a> <a
+									th:case="true" th:href="@{/apagar/}+${ordenadorCaro.id}"
+									class="btn btn-danger border-dark">Parar</a>
+							</div>
+							<div th:switch="${ordenadorCaro.enabled}" class="mr-auto p-2">
+								<a th:case="false" th:href="@{/habilitar/}+${ordenadorCaro.id}"
+									class="btn btn-warning border-dark">Dar de alta</a> <a
+									th:case="true" th:href="@{/deshabilitar/}+${ordenadorCaro.id}"
+									class="btn btn-warning border-dark">Dar de baja</a>
+							</div>
+						</div>
+						<div th:onclick="eliminar([[${ordenadorCaro.id}]])"
+							class="btn btn-danger border-dark" style="margin: 5%">
+							Eliminar</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div>
-			<a th:href="@{/newOrdenador}" class="btn btn-primary">Añadir Ordenador</a>
+	</div>
+
+	<h1 class="text-white" style="margin-left: 5%">GAMA BAJA</h1>
+	<div class="row justify-content-center g-0">
+		<div th:each="ordenadorBarato:${listaOrdenadoresBaratos}"
+			class="col-sm-12 col-md-6 col-lg-2">
+			<div
+				class="card bg-secondary border border-danger text-center text-white"
+				style="margin: 3%">
+				<a th:href="@{/editarOrdenador/}+${ordenadorBarato.id}"
+					class="align-self-end text-white" style="margin: 3%"><i
+					class="fa-solid fa-gears"></i></a>
+				<h3 th:text="${ordenadorBarato.numSerie}" class="card-title"
+					style="margin-top: 5%"></h3>
+				<div class="card-body">
+					<div th:switch="${ordenadorBarato.enabled}">
+						<div th:case="false">
+							<img th:src="@{/images/pc-icon-error.jpg}" width="100%" />
+						</div>
+						<div th:case="true">
+							<img th:src="@{/images/PC-icon-by-nurfajrialdi95-2.jpg}"
+								width="100%" />
+						</div>
+						<p th:text="|Gama: ${ordenadorBarato.tarifa}|"></p>
+						<div class="d-flex flex-row justify-content-center">
+							<div th:switch="${ordenadorBarato.sesion}" class="p-2">
+								<a th:case="false" th:href="@{/encender/}+${ordenadorBarato.id}"
+									class="btn btn-success border-dark">Iniciar</a> <a
+									th:case="true" th:href="@{/apagar/}+${ordenadorBarato.id}"
+									class="btn btn-danger border-dark">Parar</a>
+							</div>
+							<div th:switch="${ordenadorBarato.enabled}" class="mr-auto p-2">
+								<a th:case="false"
+									th:href="@{/habilitar/}+${ordenadorBarato.id}"
+									class="btn btn-warning border-dark">Dar de alta</a> <a
+									th:case="true"
+									th:href="@{/deshabilitar/}+${ordenadorBarato.id}"
+									class="btn btn-warning border-dark">Dar de baja</a>
+							</div>
+						</div>
+						<div th:onclick="eliminar([[${ordenadorBarato.id}]])"
+							class="btn btn-danger border-dark" style="margin: 5%">
+							Eliminar</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
-	<!-- integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous" -->
-	<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-	<script src="funciones.js"></script>
+	<script src="js/funciones.js"></script>
 </body>
 </html>

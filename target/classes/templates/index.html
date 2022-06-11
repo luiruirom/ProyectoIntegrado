@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="ISO-8859-1">
+<meta charset="UTF-8">
 <title>Cheetah App</title>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
@@ -9,47 +9,146 @@
 	integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
 	crossorigin="anonymous">
 </head>
-<body>
-	<div class="container mt-4 ml-1 mr-1">
-		<div class="row">
-			<div class="col">
-				<a th:href="@{/index}"><h2>CHEETAH</h2></a>
-			</div>
-			<div class="col">
-				<a th:href="@{/login}"><h2>Login</h2></a>
-			</div>
+<body class="bg-dark">
+	<nav
+		class="navbar navbar-expand-lg navbar-dark bg-secondary border-bottom border-danger"
+		style="margin-bottom: 3%">
+		<div class="container-fluid">
+			<i><a class="navbar-brand" th:href="@{/index}">CHEETAH: <br>
+					Game faster
+			</a></i> <a class="navbar-brand me-2" th:href="@{/login}">Login</a>
 		</div>
-		<div class="row">
-			<div th:each="ordenador:${listaOrdenadores}" class="col">
-				<div class="card">
-					<div class="card-header">
-						<h2 th:text="${ordenador.numSerie}"></h2>
-					</div>
-					<div class="card-body">
-						<div>
-							<p th:text="|Gama: ${ordenador.tarifa}|"></p>
+	</nav>
+	<div>
+		<h1 class="text-white" style="margin-left: 5%">GAMA ALTA</h1>
+		<div class="row justify-content-center g-0">
+			<div th:each="ordenadorCaro:${listaOrdenadoresCaros}"
+				class="col-sm-12 col-md-6 col-lg-2">
+				<div
+					class="card bg-secondary border border-danger text-center text-white"
+					style="margin: 3%">
+					<h5 th:text="${ordenadorCaro.numSerie}" class="card-title"
+						style="margin-top: 5%"></h5>
+					<div th:switch="${ordenadorCaro.enabled}">
+						<div th:case="false">
+							<img th:src="@{/images/pc-icon-error.jpg}" width=100% />
 						</div>
-					</div>
-					<div class="card-footer">
-						<div th:switch="${ordenador.enabled}">
-							<div th:case="false" class="btn btn-secondary">No disponible</div>
-							<div th:case="true">
-								<div th:switch="${ordenador.sesion}">
-									<a th:case="false" th:href="@{/reservarOrdenador/}+${ordenador.id}" class="btn btn-success">Reservar</a>
-									<div th:case="true" class="btn btn-danger">Ocupado</div>
+						<div th:case="true">
+							<img th:src="@{/images/PC-icon-by-nurfajrialdi95-2.jpg}"
+								width=100% />
+						</div>
+						<div class="card-body">
+							<p th:text="|Gama: ${ordenadorCaro.tarifa}|"></p>
+							<div th:switch="${ordenadorCaro.enabled}">
+								<div th:case="false" class="btn btn-secondary">No
+									disponible</div>
+								<div th:case="true">
+									<div th:switch="${ordenadorCaro.sesion}">
+										<a th:case="false"
+											th:href="@{/reservarOrdenador/}+${ordenadorCaro.id}"
+											class="btn btn-success">Reservar</a>
+										<div th:case="true" class="btn btn-danger">Ocupado</div>
+									</div>
 								</div>
-							</div>							
-						</div>				
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="row">
-			Noticias del d�a
-		</div>
-		<div class="row">
-			Cont�ctanos
+	</div>
+
+	<div>
+		<h1 class="text-white" style="margin-left: 5%">GAMA BAJA</h1>
+		<div class="row justify-content-center g-0">
+			<div th:each="ordenadorBarato:${listaOrdenadoresBaratos}"
+				class="col-sm-12 col-md-6 col-lg-2">
+				<div
+					class="card bg-secondary border border-danger text-center text-white"
+					style="margin: 3%">
+					<h5 th:text="${ordenadorBarato.numSerie}" class="card-title"
+						style="margin-top: 5%"></h5>
+					<div th:switch="${ordenadorBarato.enabled}">
+						<div th:case="false">
+							<img th:src="@{/images/pc-icon-error.jpg}" width=100% />
+						</div>
+						<div th:case="true">
+							<img th:src="@{/images/PC-icon-by-nurfajrialdi95-2.jpg}"
+								width=100% />
+						</div>
+						<div class="card-body">
+							<p th:text="|Gama: ${ordenadorBarato.tarifa}|"></p>
+							<div th:switch="${ordenadorBarato.enabled}">
+								<div th:case="false" class="btn btn-secondary">No
+									disponible</div>
+								<div th:case="true">
+									<div th:switch="${ordenadorBarato.sesion}">
+										<a th:case="false"
+											th:href="@{/reservarOrdenador/}+${ordenadorBarato.id}"
+											class="btn btn-success">Reservar</a>
+										<div th:case="true" class="btn btn-danger">Ocupado</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
+
+	<div>
+		<h1 class="text-white" style="margin-left: 5%; margin-top: 5%">Noticias
+			del día</h1>
+		<div class="row justify-content-around g-0">
+				<div
+					class="card bg-secondary border border-danger text-center text-white col-sm-12 col-md-6 col-lg-3"
+					style="margin: 3%; padding:2%">
+					<a
+						href="https://vandal.elespanol.com/noticia/1350754333/spiderman-estara-en-la-version-de-marvels-midnight-suns-de-xbox-no-hay-problema/"
+						class="text-white">
+						<h5
+							class="card-title" style="margin-top: 5%">Spider-Man estará
+							en la versión de Marvel's Midnight Suns de Xbox: 'No hay
+							problema'</h5>
+					</a> 
+						<a href="https://vandal.elespanol.com/noticia/1350754333/spiderman-estara-en-la-version-de-marvels-midnight-suns-de-xbox-no-hay-problema/" style="margin-top:2%; margin-bottom:5%">
+							<img th:src="@{/images/spiderman.jpg}" width=100% /></a>
+					<div class="card-body">
+						<p>Firaxis Games, responsables de Marvel's Midnight Suns,
+							aseguran no haber tenido problemas en añadir a Spider-Man en las
+							versiones de Xbox aunque su licencia pertenezca a Sony, en vez de
+							a Marvel.</p>
+					</div>
+				</div>
+				<div
+					class="card bg-secondary border border-danger text-center text-white col-sm-12 col-md-6 col-lg-3"
+					style="margin: 3%; padding:2%">
+					<a
+						href="https://vandal.elespanol.com/noticia/1350754336/encuentran-un-sorprendente-port-de-quake-para-game-boy-advance-que-puedes-descargar-y-jugar/"
+						class="text-white"><h5
+							class="card-title" style="margin-top: 5%">Encuentran un sorprendente port de Quake para Game Boy Advance que es jugable
+							</h5></a> <a href="https://vandal.elespanol.com/noticia/1350754336/encuentran-un-sorprendente-port-de-quake-para-game-boy-advance-que-puedes-descargar-y-jugar/" style="margin-top:2%; margin-bottom:5%">
+							<img th:src="@{/images/portQuake.jpg}" width=100% /></a>
+
+					<div class="card-body">
+						<p>Quake estuvo a punto de tener una versión para Game Boy Advance: el desarrollador Randy Linden creó un impresionante prototipo que acaba de ver la luz.</p>
+					</div>
+				</div>
+				<div
+					class="card bg-secondary border border-danger text-center text-white col-sm-12 col-md-6 col-lg-3"
+					style="margin: 3%; padding:2%">
+					<a
+						href="https://vandal.elespanol.com/noticia/1350754307/the-last-of-us-parte-i-comparado-con-el-original-asi-han-mejorado-los-graficos/"
+						class="text-white" style="margin-top:2%; margin-bottom:5%"><h5
+							class="card-title" style="margin-top: 5%">The Last of Us remake comparado con el original: Así han mejorado los gráficos</h5></a> <a href="https://vandal.elespanol.com/noticia/1350754307/the-last-of-us-parte-i-comparado-con-el-original-asi-han-mejorado-los-graficos/">
+							<img th:src="@{/images/TLOU.jpg}" width=100% /></a>
+
+					<div class="card-body">
+						<p>Naughty Dog hizo oficial el remake del primer The Last of Us en PS5 y PC, y su primer tráiler nos sirve para ver los cambios del juego que llega en septiembre.</p>
+					</div>
+				</div>
+			</div>
+		</div>
 </body>
 </html>

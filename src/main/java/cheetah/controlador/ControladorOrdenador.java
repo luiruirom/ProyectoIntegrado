@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cheetah.modelo.Cliente;
 import cheetah.modelo.Ordenador;
 import cheetah.modelo.Sesion;
+import cheetah.servicioInterfaz.IClienteServicio;
 import cheetah.servicioInterfaz.IOrdenadorServicio;
 import cheetah.servicioInterfaz.ISesionServicio;
 import cheetah.utils.SesionAux;
@@ -29,17 +31,24 @@ public class ControladorOrdenador {
 	@Autowired
 	private ISesionServicio servicioS;
 	
+	@Autowired
+	private IClienteServicio servicioC;
+	
 	@GetMapping({"/", "/index"})
 	public String listar(Model model) {
-		List<Ordenador>listaOrdenadores = servicioO.listar();
-		model.addAttribute("listaOrdenadores", listaOrdenadores);
+		List<Ordenador>listaOrdenadoresCaros = servicioO.listarCaros();
+		List<Ordenador>listaOrdenadoresBaratos = servicioO.listarBaratos();
+		model.addAttribute("listaOrdenadoresCaros", listaOrdenadoresCaros);
+		model.addAttribute("listaOrdenadoresBaratos", listaOrdenadoresBaratos);
 		return "index";
 	}
 	
 	@GetMapping("/loggedIndex")
 	public String listarLogin(Model model) {
-		List<Ordenador>listaOrdenadores = servicioO.listar();
-		model.addAttribute("listaOrdenadores", listaOrdenadores);
+		List<Ordenador>listaOrdenadoresCaros = servicioO.listarCaros();
+		List<Ordenador>listaOrdenadoresBaratos = servicioO.listarBaratos();
+		model.addAttribute("listaOrdenadoresCaros", listaOrdenadoresCaros);
+		model.addAttribute("listaOrdenadoresBaratos", listaOrdenadoresBaratos);
 		return "admin/loggedIndex";
 	}
 	
@@ -86,14 +95,31 @@ public class ControladorOrdenador {
 	
 	
 	@GetMapping("/encender/{id}")
-	public String encender(@PathVariable int id){
+	public String encender(@PathVariable int id, Model model){
+		Optional<Ordenador> ordenador = servicioO.listarId(id);
+		Sesion sesion = new Sesion();
+		model.addAttribute("sesion", sesion);
+		model.addAttribute("ordenador", ordenador);
+		return "admin/formInicioSesion";	
+	}
+	
+	@PostMapping("/saveEncendido")
+	public String saveEncendido(String numSerie, Sesion s) {
+		s.setNum_Serie(numSerie);
+		int id = servicioO.findIdByNumSerie(s.getNum_Serie());
 		servicioO.iniciarSesion(id);
-		servicioS.iniciarSesion(id);
-		return "redirect:/loggedIndex";	
+		servicioS.iniciarSesion(id, s.getUsuario_Reserva());
+		return "redirect:/loggedIndex";
 	}
 	
 	@GetMapping("/apagar/{id}")
 	public String apagar(@PathVariable int id){
+		for (Cliente c : servicioC.listar()) {
+			if (servicioS.getUsername(id).equals(c.getUsername())) {
+				double saldo = c.getSaldo() - servicioS.findCosteSesion(id);
+				c.setSaldo(saldo);
+			}
+		}
 		servicioO.cerrarSesion(id);
 		servicioS.cerrarSesion(id);
 		return "redirect:/loggedIndex";	
@@ -104,6 +130,12 @@ public class ControladorOrdenador {
 		List<Ordenador>listaOrdenadores = servicioO.listar();
 		for (Ordenador ordenador: listaOrdenadores) {
 			if(ordenador.isSesion()) {
+				for (Cliente c : servicioC.listar()) {
+					if (servicioS.getUsername(ordenador.getId()).equals(c.getUsername())) {
+						double saldo = c.getSaldo() - servicioS.findCosteSesion(ordenador.getId());
+						c.setSaldo(saldo);
+					}
+				}
 				servicioO.cerrarSesion(ordenador.getId());
 				servicioS.cerrarSesion(ordenador.getId());
 			}
@@ -122,12 +154,14 @@ public class ControladorOrdenador {
 	
 	@PostMapping("/saveReserva")
 	public String saveReserva(String numSerie, Sesion s) {
-		System.out.println(s.toString());
 		s.setNum_Serie(numSerie);
-		System.out.println(numSerie);
 		int id = servicioO.findIdByNumSerie(s.getNum_Serie());
-		servicioO.iniciarSesion(id);
-		servicioS.reservarSesion(LocalDateTime.parse(s.getInicioSesion()), id, s.getUsuario_Reserva());
+		if (s.isValid(s)){
+			servicioO.iniciarSesion(id);
+			servicioS.reservarSesion(LocalDateTime.parse(s.getInicioSesion()), id, s.getUsuario_Reserva());
+		} else {
+			System.out.println("La fecha está fuera del horario de la tienda");
+		}
 		return "redirect:/index";
 	}
 	
@@ -140,6 +174,7 @@ public class ControladorOrdenador {
 		for(int i = 0; i < listaSesiones.size(); i++) {
 			nextSesion = new SesionAux();
 			nextSesion.sesionParser(listaSesiones.get(i));
+			nextSesion.setTiempoMedio(servicioS.getMediaByNumSerie(nextSesion.getNumSerie()).toString()) ;
 			listaSesionesAux.add(nextSesion); 
 		}
 		model.addAttribute("dineroCaja", dineroCaja);

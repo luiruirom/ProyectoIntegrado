@@ -3,6 +3,7 @@ package cheetah.servicio;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import cheetah.interfaz.IUsuario;
 import cheetah.modelo.Authority;
+import cheetah.modelo.Usuario;
 import cheetah.servicioInterfaz.IUsuarioServicio;
 
 @Service
@@ -30,7 +32,7 @@ public class DetallesUsuarioServicio implements UserDetailsService, IUsuarioServ
 		cheetah.modelo.Usuario appUser = data.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("No existe usuario"));
 
 		// Mapear nuestra lista de Authority con la de spring security
-		List grantList = new ArrayList();
+		List<GrantedAuthority> grantList = new ArrayList<GrantedAuthority>();
 		for (Authority authority : appUser.getAuthority()) {
 			// ROLE_USER, ROLE_ADMIN,..
 			GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(authority.getAuthority());
@@ -59,5 +61,25 @@ public class DetallesUsuarioServicio implements UserDetailsService, IUsuarioServ
 	
 	public int nextId() {
 		return data.nextId() + 1;
+	}
+	
+	@Override
+	public List<Usuario> listar() {
+		return (List<Usuario>) data.findAll();
+	}
+
+	@Override
+	public Optional<Usuario> listarId(long id) {
+		return data.findById(id);
+	}
+
+	@Override
+	public void save(Usuario u) {
+		data.save(u);
+	}
+
+	@Override
+	public void delete(long id) {
+		data.deleteById(id);
 	}
 }

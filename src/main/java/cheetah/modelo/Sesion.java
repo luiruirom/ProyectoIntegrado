@@ -1,6 +1,8 @@
 package cheetah.modelo;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -65,7 +67,21 @@ public class Sesion {
 	public void setUsuario_Reserva(String usuarioReserva) {
 		this.usuario_Reserva = usuarioReserva;
 	}
-
+	
+	public boolean isValid(Sesion s) {
+		boolean res = true;
+		System.out.println(s.getInicioSesion());
+		String diaReserva = s.getInicioSesion().split("T")[0];
+		String horaReserva = s.getInicioSesion().split("T")[1];
+		
+		if(LocalDate.parse(diaReserva).isBefore(LocalDate.now()))
+			res = false;
+		if(LocalTime.parse(horaReserva).isBefore(LocalTime.of(17, 00)) || LocalTime.parse(horaReserva).isAfter(LocalTime.of(21, 00)))
+			res = false;
+		
+		return res;
+	}
+	
 	@Override
 	public String toString() {
 		return "Sesion [id=" + id + ", inicio_Sesion=" + inicio_Sesion + ", fin_Sesion=" + fin_Sesion + ", coste_Total="

@@ -1,5 +1,6 @@
 package cheetah.servicio;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +36,30 @@ public class OrdenadorServicio implements IOrdenadorServicio {
 	public void delete(int id) {
 		data.deleteById(id);
 	} 
+	
+	@Override
+	public List<Ordenador> listarCaros() {
+		ArrayList<Ordenador> listaOrdenadores = new ArrayList<Ordenador>();
+		for(Ordenador elemento: data.findAll()) {
+			if(elemento.getTarifa().equals("alta")) {
+				listaOrdenadores.add(elemento);
+			}	
+		}
+		
+		return listaOrdenadores;
+	}
+
+	@Override
+	public List<Ordenador> listarBaratos() {
+		ArrayList<Ordenador> listaOrdenadores = new ArrayList<Ordenador>();
+		for(Ordenador elemento: data.findAll()) {
+			if(elemento.getTarifa().equals("baja")) {
+				listaOrdenadores.add(elemento);
+			}	
+		}
+		
+		return listaOrdenadores;
+	}
 	
 	@Override
 	public int findIdByNumSerie(String numSerie) {

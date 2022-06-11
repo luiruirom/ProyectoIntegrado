@@ -67,11 +67,13 @@ public class Ordenador {
 	public boolean isValid(Ordenador o) {
 		
 		boolean res = false;
-		Pattern pattern = Pattern.compile("YGO+-100[0-9][0-9]$");
-        Matcher mat = pattern.matcher(o.getNumSerie());
+		Pattern patternAlta = Pattern.compile("YGO+-100[0-9][0-9]$");
+		Pattern patternBaja = Pattern.compile("YGO+-200[0-9][0-9]$");
+        Matcher matAlta = patternAlta.matcher(o.getNumSerie());
+        Matcher matBaja = patternBaja.matcher(o.getNumSerie());
 		
 		//Se valida el número de serie
-		if(!mat.matches()) {
+		if(!matAlta.matches() && !matBaja.matches()) {
 			System.out.println("Error número de serie");
 			return res;
 		}

@@ -3,8 +3,10 @@ package cheetah.servicio;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,12 +46,19 @@ public class SesionServicio implements ISesionServicio{
 	public void delete(int id) {
 		dataS.deleteById(id);
 	} 
-
+	
 	@Override
-	public void iniciarSesion(int id) {
+	public String getUsername(int id) {
+		String numSerieOrdenador = dataO.findNumSerie(id);
+		int idSesion = dataS.findOrdenadorSesionActiva(numSerieOrdenador);
+		return dataS.findUser(idSesion);
+	}
+	
+	@Override
+	public void iniciarSesion(int id, String username) {
 		LocalDateTime horaActual = LocalDateTime.now();
 		int nextId = dataS.nextId() + 1;
-		dataS.iniciarSesion(nextId, horaActual, dataO.findNumSerie(id));
+		dataS.iniciarSesion(nextId, horaActual, dataO.findNumSerie(id), username);
 		dataO.iniciarSesion(id, true);
 	}
 	
@@ -83,7 +92,7 @@ public class SesionServicio implements ISesionServicio{
 			int horaFactura = horasFactura.getHour();
 			int minutosFactura = horasFactura.getMinute();
 			int segundosFactura = horasFactura.getSecond();
-			String nombreFactura = "F:\\Luis\\dev\\spring-workspace\\CheetahApp\\src\\main\\resources\\assets\\facturas\\" + numSerie + "." + fechaFactura.toString() + "." + horaFactura + "." + minutosFactura + "." + segundosFactura +".txt";
+			String nombreFactura = "F:\\Luis\\dev\\spring-workspace\\CheetahApp\\src\\main\\resources\\static\\facturas\\" + numSerie + "." + fechaFactura.toString() + "." + horaFactura + "." + minutosFactura + "." + segundosFactura +".txt";
 			
 			if(tarifa.equals("alta")) {
 				costeTotal = costeTotal*2;
@@ -103,6 +112,36 @@ public class SesionServicio implements ISesionServicio{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public Double findCosteSesion(int id) {
+		String numSerieOrdenador = dataO.findNumSerie(id);
+		int idSesion = dataS.findOrdenadorSesionActiva(numSerieOrdenador);
+		return dataS.findCosteSesion(idSesion);
+	}
+	
+	@Override
+	public String getMediaByNumSerie(String numSerie) {
+		int contadorOrdenadores = 0;
+		ArrayList<Duration> listaDuraciones = new ArrayList<Duration>();
+		for (Sesion ordenador : dataS.findAll()) {
+			if (ordenador.getNum_Serie().equals(numSerie)) {
+				listaDuraciones.add(Duration.between(LocalDateTime.parse(ordenador.getInicioSesion().substring(0,10)+'T'+ordenador.getInicioSesion().substring(11)), ordenador.getFinSesion()));
+				contadorOrdenadores++;
+			}
+		}
+		
+		for(int i = 1; i < listaDuraciones.size(); i++) {
+			listaDuraciones.get(0).plus(listaDuraciones.get(i));
+		}
+		
+		String duracion = listaDuraciones.get(0).dividedBy(contadorOrdenadores).toString().substring(2);
+		String parsedDuracion = duracion.replace("-", " ");
+		
+		System.out.println(parsedDuracion);
+		
+		return parsedDuracion;
 	}
 	
 	@Override
