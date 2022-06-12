@@ -14,12 +14,12 @@
 		class="navbar navbar-expand-lg navbar-dark bg-secondary border-bottom border-danger"
 		style="margin-bottom: 3%">
 		<div class="container-fluid">
-			<i><a class="navbar-brand" th:href="@{/index}">CHEETAH:
-					<br> Game faster
+			<i><a class="navbar-brand" th:href="@{/index}">CHEETAH: <br>
+					Game faster
 			</a></i>
 		</div>
 	</nav>
-	
+
 	<div class="row justify-content-center text-center">
 		<div class="col-lg-4">
 			<form th:action="@{/saveReserva}" method="POST">
@@ -29,24 +29,34 @@
 					</div>
 					<div class="card-body">
 						<label>CÓDIGO ORDENADOR</label>
-						<div class="form-group">						
+						<div class="form-group">
 							<input th:field="${ordenador.numSerie}" type="text" readonly>
 						</div>
 						<label>NOMBRE DE USUARIO</label>
-						<div class="form-group">							
-							<input th:field="${sesion.usuario_Reserva}" type="text" required/>
+						<div class="form-group">
+							<input th:field="${sesion.usuario_Reserva}" type="text" required />
 						</div>
 						<label>FECHA DE RESERVA</label>
-						<div class="form-group">						
-							<input th:field="${sesion.inicioSesion}" type="datetime-local"/>
+						<div class="form-group">
+							<input th:field="${sesion.inicioSesion}" type="datetime-local"
+								required />
 						</div>
 					</div>
-					<div class="card-footer">
-						<a th:href="@{/index}" class="btn btn-danger">Cancelar</a>
-						<input type="submit" value="Reservar" class="btn btn-success">
+					<div th:switch="${sesionActiva}"  class="card-footer">
+						<div th:case="true">
+							<a th:href="@{/index}" class="btn btn-danger">Cancelar</a> 
+							<div class="btn btn-secondary">Ocupado</div>
+						</div>
+						<div th:case="false">
+							<a th:href="@{/index}" class="btn btn-danger">Cancelar</a> 
+							<input type="submit" value="Reservar" class="btn btn-success">
+						</div>
 					</div>
+
 				</div>
 			</form>
+			<p class="text-white">Las reservas solo se permitirán para el
+				mismo día y serán en el horario normal del centro 17:00 - 21:00</p>
 		</div>
 	</div>
 </body>

@@ -55,16 +55,17 @@ public class SesionServicio implements ISesionServicio{
 	}
 	
 	@Override
+	public void reservarSesion(LocalDateTime horaReserva, int id, String usuarioReserva) {
+		int nextId = dataS.nextId() + 1;
+		dataS.reservarSesion(nextId, horaReserva, dataO.findNumSerie(id), usuarioReserva);
+		dataO.iniciarSesion(id, true);
+	}
+	
+	@Override
 	public void iniciarSesion(int id, String username) {
 		LocalDateTime horaActual = LocalDateTime.now();
 		int nextId = dataS.nextId() + 1;
 		dataS.iniciarSesion(nextId, horaActual, dataO.findNumSerie(id), username);
-		dataO.iniciarSesion(id, true);
-	}
-	
-	public void reservarSesion(LocalDateTime horaReserva, int id, String usuarioReserva) {
-		int nextId = dataS.nextId() + 1;
-		dataS.reservarSesion(nextId, horaReserva, dataO.findNumSerie(id), usuarioReserva);
 		dataO.iniciarSesion(id, true);
 	}
 
@@ -109,9 +110,11 @@ public class SesionServicio implements ISesionServicio{
 			"\n" + "TOTAL: " + costeTotal;
 			bw.write(factura);
 			bw.close();
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 	}
 	
 	@Override
@@ -122,30 +125,7 @@ public class SesionServicio implements ISesionServicio{
 	}
 	
 	@Override
-	public String getMediaByNumSerie(String numSerie) {
-		int contadorOrdenadores = 0;
-		ArrayList<Duration> listaDuraciones = new ArrayList<Duration>();
-		for (Sesion ordenador : dataS.findAll()) {
-			if (ordenador.getNum_Serie().equals(numSerie)) {
-				listaDuraciones.add(Duration.between(LocalDateTime.parse(ordenador.getInicioSesion().substring(0,10)+'T'+ordenador.getInicioSesion().substring(11)), ordenador.getFinSesion()));
-				contadorOrdenadores++;
-			}
-		}
-		
-		for(int i = 1; i < listaDuraciones.size(); i++) {
-			listaDuraciones.get(0).plus(listaDuraciones.get(i));
-		}
-		
-		String duracion = listaDuraciones.get(0).dividedBy(contadorOrdenadores).toString().substring(2);
-		String parsedDuracion = duracion.replace("-", " ");
-		
-		System.out.println(parsedDuracion);
-		
-		return parsedDuracion;
-	}
-	
-	@Override
-	public List<String> listarSesiones() {
+	public List<String> RecaudacionByNumSerie() {
 		return dataS.listarSesiones();
 	}
 	
@@ -153,4 +133,51 @@ public class SesionServicio implements ISesionServicio{
 	public Double dineroTotal() {
 		return dataS.dineroTotal();
 	}
+	
+	@Override
+	public String getMediaByNumSerie(String numSerie) {
+		
+		//Se inicializa un contador para hacer la media según el caso y se inicializa una lista vacía de duraciones
+		int contadorSesiones = 0;
+		ArrayList<Duration> listaDuraciones = new ArrayList<Duration>();
+		
+		//Por cada sesion, se comprueba que el número de serie es el mismo que el que se busca y que la sesión no esté activa en ese momento. 
+		//En caso de ser así, se añade la duración de la sesión a la lista de duraciones
+		for (Sesion sesion : dataS.findAll()) {
+			if (sesion.getNum_Serie().equals(numSerie) && !sesion.isSesion(sesion)) {
+				listaDuraciones.add(Duration.between(LocalDateTime.parse(sesion.getInicioSesion().substring(0,10) + 'T' + sesion.getInicioSesion().substring(11)), sesion.getFinSesion()));
+				contadorSesiones++;
+			}
+		}
+		
+		//Se inicializan dos variables
+		//dur se usa en caso de que haya más de una duración en la lista de Duraciones, en ese caso, se almacena el primer valor de la lista y se suman en la variable el resto de duraciones.
+		//parsedDuracion es una variable que se usa para almacenar el valor final de la media de las duraciones una vez ha sido formateado adecuadamante.
+		Duration dur = null;
+		String parsedDuracion = null;
+		
+		//Se comprueba el tamaño de la lista de las duraciones
+		if (listaDuraciones.size() > 1){
+			dur = listaDuraciones.get(0);
+			listaDuraciones.remove(0);
+		
+			for(Duration duracion : listaDuraciones) {
+				dur.plus(duracion);
+			}
+			
+			String duracion = dur.dividedBy(contadorSesiones).toString().substring(2);
+			parsedDuracion = duracion.replace("-", "");
+						
+		} else if (listaDuraciones.size() == 1){
+			String duration = listaDuraciones.get(0).toString().substring(2);
+			parsedDuracion = duration.replace("-", " ");
+			
+		} else {
+			parsedDuracion = "No hay sesiones con este ordenador";
+		}
+		
+		return parsedDuracion;		
+	}
 }
+
+

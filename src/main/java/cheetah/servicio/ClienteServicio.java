@@ -28,7 +28,11 @@ public class ClienteServicio implements IClienteServicio {
 
 	@Override
 	public void save(Cliente c) {
-		data.save(c);
+		if (c.isValid(c)) {
+			data.save(c);
+		} else {
+			System.out.println("Alguno de los valores del cliente es erróneo, por favor, vuelve a intentarlo.");
+		}	
 	}
 
 	@Override

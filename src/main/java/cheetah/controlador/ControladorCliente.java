@@ -51,18 +51,13 @@ public class ControladorCliente {
 	}
 	
 	@PostMapping("/saveCliente")
-	public String save(Cliente c, Model model) {
-		if (c.isValid(c)) {
-			servicio.save(c);
-		} else {
-			System.out.println("Intento fallido");
-		}
+	public String save(Cliente c) {
+		servicio.save(c);
 		return "redirect:/listarClientes";
 	}
 	
 	@PostMapping("/addSaldo/{id}")
 	public String addSaldo(@PathVariable int id, SaldoAux saldo) {
-		System.out.println(saldo.getSaldo());
 		double saldoActual = servicio.getSaldo(id);
 		saldoActual = saldoActual + saldo.getSaldo();
 		servicio.addSaldo(id, saldoActual);

@@ -29,19 +29,18 @@ public class OrdenadorServicio implements IOrdenadorServicio {
 
 	@Override
 	public void save(Ordenador o) {
-		data.save(o);
+		if(o.isValid(o)) {
+			data.save(o);
+		} else {
+			System.out.println("El ordenador que has introducido tiene algún dato incorrecto.");
+		}
+		
 	}
 
 	@Override
 	public void delete(int id) {
 		data.deleteById(id);
 	} 
-	
-	public void crearOrdenador(Ordenador o) {
-		int nextId = data.nextId() + 1;
-		o.setId((int) nextId);
-		data.save(o);
-	}
 	
 	@Override
 	public List<Ordenador> listarCaros() {
@@ -73,13 +72,19 @@ public class OrdenadorServicio implements IOrdenadorServicio {
 	}
 	
 	@Override
-	public void habilitar(int id) {
-		data.habilitar(id, true);		
+	public void crearOrdenador(Ordenador o) {
+		int nextId = data.nextId() + 1;
+		o.setId((int) nextId);
+		if(o.isValid(o)) {
+			data.save(o);
+		} else {
+			System.out.println("El ordenador que has introducido tiene algún dato incorrecto.");
+		}
 	}
-
+	
 	@Override
-	public void deshabilitar(int id) {
-		data.deshabilitar(id, false);	
+	public void editarOrdenador(int id, String numSerie, String tarifa) {
+		data.editarOrdenador(id, numSerie, tarifa);	
 	}
 	
 	@Override
@@ -91,10 +96,19 @@ public class OrdenadorServicio implements IOrdenadorServicio {
 	public void cerrarSesion(int id) {
 		data.cerrarSesion(id, false);
 	}
-	
+
 	@Override
-	public void editarOrdenador(int id, String numSerie, String tarifa) {
-		data.editarOrdenador(id, numSerie, tarifa);	
+	public void habilitar(int id) {
+		data.habilitar(id, true);		
+	}
+
+	@Override
+	public void deshabilitar(int id) {
+		data.deshabilitar(id, false);	
+	}
+	
+	public boolean isSesionById(int id) {
+		return data.isSesionById(id);
 	}
 	
 }

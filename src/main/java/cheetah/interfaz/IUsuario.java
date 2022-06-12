@@ -18,16 +18,16 @@ public interface IUsuario extends CrudRepository<Usuario, Long>{
 	@Transactional
 	@Modifying
 	@Query(value = "INSERT INTO Usuario u (u.id, u.enabled, u.password, u.username) VALUES (:id, 1, :password, :username)", nativeQuery = true)
-	public void crearUser(@Param(value = "id") int id, @Param(value = "password") String password, @Param(value = "username") String username);
+	void crearUser(@Param(value = "id") int id, @Param(value = "password") String password, @Param(value = "username") String username);
 	
 	@Transactional
 	@Modifying
 	@Query(value = "INSERT INTO Authorities_users a (usuario_id, authority_id) VALUES (:usuario_id, 1)", nativeQuery = true)
-	public void linkearUser(@Param(value = "usuario_id") int id);
+	void linkearUser(@Param(value = "usuario_id") int id);
 	
 	@Query("SELECT id FROM Usuario u where u.username = :username")
-	public int findIdByUsername(@Param(value = "username") String username);
+	int findIdByUsername(@Param(value = "username") String username);
 	
 	@Query("SELECT COUNT(*) FROM Usuario")
-	public int nextId();
+	int nextId();
 }

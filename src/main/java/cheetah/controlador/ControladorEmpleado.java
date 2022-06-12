@@ -20,41 +20,37 @@ public class ControladorEmpleado {
 
 	@Autowired
 	private IEmpleadoServicio servicio;
-	
+
 	@GetMapping("/listarEmpleados")
 	public String listar(Model model) {
-		List<Empleado>listaEmpleados = servicio.listar();
+		List<Empleado> listaEmpleados = servicio.listar();
 		model.addAttribute("listaEmpleados", listaEmpleados);
 		return "admin/empleados";
 	}
-	
+
 	@GetMapping("/editarEmpleados/{id}")
 	public String editar(@PathVariable int id, Model model) {
-		Optional<Empleado>empleado = servicio.listarId(id);
+		Optional<Empleado> empleado = servicio.listarId(id);
 		model.addAttribute("empleado", empleado);
 		return "admin/formEmpleados";
 	}
-	
+
 	@GetMapping("/eliminarEmpleados/{id}")
 	public String delete(@PathVariable int id, Model model) {
 		servicio.delete(id);
 		return "redirect:/listarEmpleados";
 	}
-	
+
 	@GetMapping("/newEmpleado")
 	public String agregar(Model model) {
 		model.addAttribute("empleado", new Empleado());
 		return "admin/formEmpleados";
 	}
-	
+
 	@PostMapping("/saveEmpleado")
-	public String save(Empleado e, Model model) {
-		if (e.isValid(e)) {
-			servicio.save(e);
-		} else {
-			System.out.println("Intento fallido");
-		}
+	public String save(Empleado e) {
+		servicio.save(e);
 		return "redirect:/listarEmpleados";
 	}
-	
+
 }

@@ -74,7 +74,14 @@ public class Sesion {
 		String diaReserva = s.getInicioSesion().split("T")[0];
 		String horaReserva = s.getInicioSesion().split("T")[1];
 		
-		if(LocalDate.parse(diaReserva).isBefore(LocalDate.now()))
+		for(int i = 0; i < s.getUsuario_Reserva().length() - 1; i++) {
+			if (!Character.isLetter(s.getUsuario_Reserva().charAt(i))) {
+				System.out.println("Usuario inválido");
+				return res;
+			}		
+		}
+		
+		if(LocalDate.parse(diaReserva).isBefore(LocalDate.now()) || LocalDate.parse(diaReserva).isAfter(LocalDate.now()))
 			res = false;
 		if(LocalTime.parse(horaReserva).isBefore(LocalTime.of(17, 00)) || LocalTime.parse(horaReserva).isAfter(LocalTime.of(21, 00)))
 			res = false;
@@ -82,6 +89,12 @@ public class Sesion {
 		return res;
 	}
 	
+	public boolean isSesion(Sesion s) {
+		if(s.inicio_Sesion != null && s.fin_Sesion == null) {
+			return true;
+		}
+		return false;
+	}
 	@Override
 	public String toString() {
 		return "Sesion [id=" + id + ", inicio_Sesion=" + inicio_Sesion + ", fin_Sesion=" + fin_Sesion + ", coste_Total="

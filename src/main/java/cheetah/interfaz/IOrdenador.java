@@ -37,6 +37,9 @@ public interface IOrdenador extends CrudRepository<Ordenador, Integer>{
 	@Query("UPDATE Ordenador o SET o.numSerie = :numSerie, o.tarifa = :tarifa WHERE o.id = :id")
 	void editarOrdenador(@Param(value = "id") int id, @Param(value = "numSerie") String numSerie, @Param(value = "tarifa") String tarifa);
 	
+	@Query("SELECT sesion FROM Ordenador where id = :id")
+	boolean isSesionById(@Param(value = "id") int id);
+	
 	@Query("SELECT id FROM Ordenador where numSerie = :numSerie")
 	int findIdByNumSerie(@Param(value = "numSerie") String numSerie);
 	

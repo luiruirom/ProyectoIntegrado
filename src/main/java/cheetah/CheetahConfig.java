@@ -47,10 +47,7 @@ public class CheetahConfig extends WebSecurityConfigurerAdapter{
     //Crea el encriptador de contraseñas	
     public BCryptPasswordEncoder passwordEncoder() {
 		bCryptPasswordEncoder = new BCryptPasswordEncoder(5);
-		//El numero 4 representa que tan fuerte quieres la encriptacion.
-		//Se puede en un rango entre 4 y 31. 
-		//Si no pones un numero el programa utilizara uno aleatoriamente cada vez
-		//que inicies la aplicacion, por lo cual tus contrasenas encriptadas no funcionaran bien
+		//El número 5 representa la fuerza de la encriptacion.
         return bCryptPasswordEncoder;
     }
 	
@@ -58,8 +55,6 @@ public class CheetahConfig extends WebSecurityConfigurerAdapter{
     //Registra el service para usuarios y el encriptador de contrasena
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception { 
-        // Setting Service to find User in the database.
-        // And Setting PassswordEncoder
         auth.userDetailsService (userDetailsService).passwordEncoder(passwordEncoder());     
     }
 	

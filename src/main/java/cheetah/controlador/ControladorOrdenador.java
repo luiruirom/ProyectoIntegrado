@@ -73,21 +73,13 @@ public class ControladorOrdenador {
 	
 	@PostMapping("/crearOrdenador")
 	public String crearOrdenador(Ordenador o, Model model) {
-		if (o.isValid(o)) {
-			servicioO.crearOrdenador(o);
-		} else {
-			System.out.println("Intento fallido");
-		}
+		servicioO.crearOrdenador(o);
 		return "redirect:/loggedIndex";
 	}
 	
 	@PostMapping("/saveOrdenador")
 	public String save(Ordenador o, Model model) {
-		if (o.isValid(o)) {
-			servicioO.save(o);
-		} else {
-			System.out.println("Intento fallido");
-		}
+		servicioO.save(o);
 		return "redirect:/loggedIndex";
 	}
 	
@@ -157,8 +149,10 @@ public class ControladorOrdenador {
 	public String reservar(@PathVariable int id, Model model) {
 		Optional<Ordenador> ordenador = servicioO.listarId(id);
 		Sesion sesion = new Sesion();
+		boolean sesionActiva = servicioO.isSesionById(id);
 		model.addAttribute("sesion", sesion);
 		model.addAttribute("ordenador", ordenador);
+		model.addAttribute("sesionActiva", sesionActiva);
 		return "admin/formReserva";
 	}
 	
@@ -180,10 +174,10 @@ public class ControladorOrdenador {
 		SesionAux nextSesion = new SesionAux();
 		List<SesionAux> listaSesionesAux = new ArrayList<SesionAux>();
 		Double dineroCaja = servicioS.dineroTotal();
-		List<String>listaSesiones = servicioS.listarSesiones();
-		for(int i = 0; i < listaSesiones.size(); i++) {
+		List<String>listaRecaudaciones = servicioS.RecaudacionByNumSerie();
+		for(int i = 0; i < listaRecaudaciones.size(); i++) {
 			nextSesion = new SesionAux();
-			nextSesion.sesionParser(listaSesiones.get(i));
+			nextSesion.sesionParser(listaRecaudaciones.get(i));
 			nextSesion.setTiempoMedio(servicioS.getMediaByNumSerie(nextSesion.getNumSerie()).toString()) ;
 			listaSesionesAux.add(nextSesion); 
 		}

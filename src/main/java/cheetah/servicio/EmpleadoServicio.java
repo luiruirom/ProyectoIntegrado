@@ -28,7 +28,11 @@ public class EmpleadoServicio implements IEmpleadoServicio{
 
 	@Override
 	public void save(Empleado e) {
-		data.save(e);
+		if (e.isValid(e)) {
+			data.save(e);
+		} else {
+			System.out.println("Intento fallido");
+		}
 	}
 
 	@Override

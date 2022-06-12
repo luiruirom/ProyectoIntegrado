@@ -71,5 +71,15 @@ public class Usuario {
 	public void setAuthority(Set<Authority> authority) {
 		this.authority = authority;
 	}
+	
+	public boolean isValid(Usuario u) {
+		for(int i = 0; i < u.getUsername().length(); i++) {
+			if (!Character.isLetter(u.getUsername().charAt(i))) {
+				System.out.println("Usuario inválido");
+				return false;
+			}	
+		}	
+		return true;
+	}
 }
 

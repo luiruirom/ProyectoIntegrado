@@ -10,6 +10,7 @@ public interface IClienteServicio {
 	public Optional<Cliente>listarId(int id);
 	public void save(Cliente c);
 	public void delete(int id);
+	
 	public double getSaldo(int id);
 	public void addSaldo(int id, double saldo);
 }

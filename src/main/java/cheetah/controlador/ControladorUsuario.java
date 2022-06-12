@@ -38,6 +38,10 @@ public class ControladorUsuario {
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(5);
 		int idUser = servicio.nextId();
 		
+		if (!usuario.isValid(usuario)){
+			return "redirect:/loggedIndex";
+		}
+			
 		usuario.setId(idUser);
 		String encryptedPass =  bCryptPasswordEncoder.encode(usuario.getPassword());
 		servicio.crearUser(idUser, encryptedPass, usuario.getUsername());
